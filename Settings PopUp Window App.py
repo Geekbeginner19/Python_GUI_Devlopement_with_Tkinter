@@ -35,8 +35,8 @@ def settings():
     toplevLabel = tk.Label(toplev, text = "Choose Preferences", font = font2)
     toplevLabel.pack(pady=5)
 
-    #Radio Button to enable features
-    radBtn = tk.Radiobutton(toplev, text = "Enable Features", value = 1, command = enableFeat)
+    #Check Button to enable features
+    radBtn = tk.Checkbutton(toplev, text = "Enable Features", command = enableFeat)
     radBtn.pack(pady = 5)
 
     #Close Top Level Window Button
