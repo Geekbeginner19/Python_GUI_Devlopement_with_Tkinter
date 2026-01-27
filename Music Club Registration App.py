@@ -18,7 +18,7 @@ import tkinter as tk
 from tkinter.font import Font 
 
 root = tk.Tk()
-root.minsize(400, 250)
+root.minsize(400, 150)
 root.title("Music Club Registration App")
 
 #Fonts
@@ -50,7 +50,6 @@ def about():
 
     AbtLabel = tk.Label(toplev, text = "Nothing to really see here :)", font = font2)
     AbtLabel.pack()
-
 
 #Title Label
 titleLabel = tk.Label(root, text = "Music Club Registration App", font = font1)
@@ -90,6 +89,7 @@ emailEntry = tk.Entry(LabelFrame1)
 
 ageLabel = tk.Label(LabelFrame1, text = "Age")
 ageSpin = tk.Spinbox(LabelFrame1, from_= 14, to = 40)
+ageSpin.delete(0, tk.END)#Not recommended but works
 
 nameLabel.grid(column = 0, row = 0)
 nameEntry.grid(column = 1, row = 0)
@@ -103,19 +103,65 @@ ageSpin.grid(column = 1, row = 2)
 LabelFrame2 = tk.LabelFrame(root, text = "Music Preference", font = font2)
 LabelFrame2.pack(pady = 5)
 
+#The Mood
+mood = ["Happy", "Chill", "Energetic"]
+mood_var = tk.StringVar()#Variable for the radiobuttons
+#Mood Label
+moodLabel = tk.Label(LabelFrame2, text = "Select Mood", font = font2, fg = "blue")
+moodLabel.pack(pady = 5)
+
+#Creating the radio buttons
+for moodinstance in mood:
+    moodRadioBtn = tk.Radiobutton(LabelFrame2, text = moodinstance, value = moodinstance, variable = mood_var).pack(anchor = "nw")
+
 #The Genre
 genres = ["Hip-Hop", "Pop", "Rock", "Country", "Afrobeat", "R&B", "Rap", "Hip-Life", "High-Life"]
-mood_var = tk.StringVar()
 
-#Music Preferences
-moodLabel = tk.Label(LabelFrame2, text = "Mood", font = font2)
-moodLabel.pack()
+#Genre Label
+moodLabel = tk.Label(LabelFrame2, text = "Select Genre", font = font2, fg = "blue")
+moodLabel.pack(pady = 10)
 
+#Creating a scrollbar to handle the listbox
+lstboxscrollbar = tk.Scrollbar(LabelFrame2)
+lstboxscrollbar.pack(side = "right", fill = "y")
+
+#Listboxes for the genre whiles connectting the scrollbar to the listbox (when creating the listbox)
+genreLstBox = tk.Listbox(LabelFrame2, width = 10, height = 7,selectmode = tk.MULTIPLE, yscrollcommand = lstboxscrollbar.set)
+
+#Adding the items in the ListBox
 for genre in genres:
-    tk.Radiobutton(LabelFrame2, text = genre, variable = mood_var, value = genre).pack()
+    genreLstBox.insert("end", genre)
+genreLstBox.pack(anchor = "nw", padx = 3)
+
+#Telling the scrollbar to control the listbox (Should come after the listbox is created)
+lstboxscrollbar.config(command = genreLstBox.yview)
 
 
+#LabelFrame3: Terms
+LabelFrame3 = tk.LabelFrame(root, text = "Terms & Conditions", font = font2)
+LabelFrame3.pack(pady = 5)
 
+#Checkbuttons for the terms and conditions
+termsVar = tk.BooleanVar()#Assigning the value of the terms and conditions to termsVar
+termsCheckButton = tk.Checkbutton(LabelFrame3, text = "I Agree to the Club Rules", font = font2, variable = termsVar)
+termsCheckButton.pack()
 
+def submit():
+    #Text Widget
+    spinVal = ageSpin.get()
+    nameVal = nameEntry.get().strip()
+    emailVal = emailEntry.get().strip()
+    if nameVal and emailVal and termsVar.get() and spinVal:
+        output = tk.Text(root, width = 90)
+        output.insert("insert", f"Name: {nameVal}")
+        output.insert("insert", f"\nEmail: {emailVal}")
+        output.insert("insert", f"\nAge: {spinVal}")
+        output.pack(pady = 5)
+    else:
+        print("Enter all info & Check the terms and conditions")
+
+#Submit Button
+submitBtn = tk.Button(root, text = "Submit", font = font2, command = submit)
+submitBtn.pack(pady = 5)
 
 root.mainloop()
