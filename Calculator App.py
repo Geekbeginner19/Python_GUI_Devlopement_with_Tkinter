@@ -42,6 +42,11 @@ buttons = [
     "+", "-", "*", "/", "=",
     "."
 ]
+#Button Modifications
+def on_button_click(value):
+    current = displayEntry.get() #Gets the values of whatever entered
+    displayEntry.delete(0, tk.END)
+    displayEntry.insert(0, current + value)
 
 row = 1
 col = 0
@@ -52,7 +57,8 @@ for btn in buttons:
         text = btn, 
         font = font2, 
         width = 5, 
-        height = 2
+        height = 2,
+        command = lambda value = btn: on_button_click(value)
     )
     calcbtns.grid(row = row, column = col, padx = 8.5, pady = 5)
 
