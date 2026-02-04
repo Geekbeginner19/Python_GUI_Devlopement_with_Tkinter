@@ -47,6 +47,23 @@ def on_button_click(value):
     current = displayEntry.get() #Gets the values of whatever entered
     displayEntry.delete(0, tk.END)
     displayEntry.insert(0, current + value)
+    
+    # If value is an operator
+    if value in "+-*/":
+        if current == "":
+            return  # Rule 1: no operator at start
+        if current[-1] in "+-*/":
+            return  # Rule 2: no double operators
+
+    # If value is a decimal point
+    if value == ".":
+        last_number = ""
+        for char in reversed(current):
+            if char in "+-*/":
+                break
+            last_number = char + last_number
+        if "." in last_number:
+            return  # Rule 3: one decimal per number
 
 row = 1
 col = 0
