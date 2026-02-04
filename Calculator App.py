@@ -1,6 +1,7 @@
 #Building a Calculator App Using Tkinter
 import tkinter as tk 
 from tkinter.font import Font
+from tkinter import messagebox
 
 #Window
 root = tk.Tk()
@@ -40,14 +41,31 @@ buttons = [
     "1", "2", "3", "4", "5",
     "6", "7", "8", "9", "0",
     "+", "-", "*", "/", "=",
-    "."
+    ".", "C", "←"
 ]
+#Function for the clear button
+def clear_display():
+    displayEntry.delete(0, tk.END)
+
+#Function for the delete button
+def delete_last():
+    current = displayEntry.get()
+    if current: #Checks to see if there are any characters on screen
+        displayEntry.delete(len(current) - 1, tk.END) 
+
 #Button Modifications
 def on_button_click(value):
+    if value == "=":
+        try:
+            expression = displayEntry.get()
+            result = eval(expression)
+            displayEntry.delete(0, tk.END)
+            displayEntry.insert(0, str(result))
+        except:
+            messagebox.showerror("Error", "Invalid Expression")
+            displayEntry.delete(0, tk.END)
+        return
     current = displayEntry.get() #Gets the values of whatever entered
-    displayEntry.delete(0, tk.END)
-    displayEntry.insert(0, current + value)
-    
     # If value is an operator
     if value in "+-*/":
         if current == "":
@@ -64,19 +82,40 @@ def on_button_click(value):
             last_number = char + last_number
         if "." in last_number:
             return  # Rule 3: one decimal per number
+    displayEntry.delete(0, tk.END)
+    displayEntry.insert(0, current + value)
 
 row = 1
 col = 0
 
 for btn in buttons:
-    calcbtns = tk.Button(
-        root, 
-        text = btn, 
-        font = font2, 
-        width = 5, 
-        height = 2,
-        command = lambda value = btn: on_button_click(value)
-    )
+    if btn == "C": #Handling the clear button differently
+        calcbtns = tk.Button(
+            root,
+            text=btn,
+            font=font2,
+            width=5,
+            height=2,
+            command=clear_display
+        )
+    elif (btn == "←"):
+        calcbtns = tk.Button(
+            root,
+            text=btn,
+            font=font2,
+            width=5,
+            height=2,
+            command=delete_last
+        )
+    else:
+        calcbtns = tk.Button(
+            root,
+            text=btn,
+            font=font2,
+            width=5,
+            height=2,
+            command=lambda value=btn: on_button_click(value)
+        )
     calcbtns.grid(row = row, column = col, padx = 8.5, pady = 5)
 
     #Resetting the number of rows when the column number reaches 4
